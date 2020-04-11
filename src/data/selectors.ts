@@ -1,94 +1,94 @@
 import { createSelector } from 'reselect';
-import { Schedule, Session, ScheduleGroup } from '../models/Schedule';
+import { Assets, Video, VideoGroup } from '../models/Assets';
 import { AppState } from './state';
 
-const getSchedule = (state: AppState) => {
+const getAssets = (state: AppState) => {
 
-  return state.data.schedule
+  return state.data.assets
 };
-export const getSpeakers = (state: AppState) => state.data.speakers;
-const getSessions = (state: AppState) => state.data.sessions;
+export const getServers = (state: AppState) => state.data.servers;
+const getVideos = (state: AppState) => state.data.videos;
 const getFilteredTracks = (state: AppState) => state.data.filteredTracks;
-const getFavoriteIds = (state: AppState) => state.data.favorites;
+const getFavoriIds = (state: AppState) => state.data.favoris;
 const getSearchText = (state: AppState) => state.data.searchText;
 
-export const getFilteredSchedule = createSelector(
-  getSchedule, getFilteredTracks,
-  (schedule, filteredTracks) => {
-    const groups: ScheduleGroup[] = [];
-    schedule.groups.forEach(group => {
-      const sessions: Session[] = [];
-      group.sessions.forEach(session => {
-        session.tracks.forEach(track => {
+export const getFilteredAssets = createSelector(
+  getAssets, getFilteredTracks,
+  (assets, filteredTracks) => {
+    const groups: VideoGroup[] = [];
+    assets.groups.forEach(group => {
+      const videos: Video[] = [];
+      group.videos.forEach(video => {
+        video.tracks.forEach(track => {
           if (filteredTracks.indexOf(track) > -1) {
-            sessions.push(session);
+            videos.push(video);
           }
         })
       })
-      if (sessions.length) {
-        const groupToAdd: ScheduleGroup = {
+      if (videos.length) {
+        const groupToAdd: VideoGroup = {
           time: group.time,
-          sessions
+          videos
         }
         groups.push(groupToAdd);
       }
     });
 
     return {
-      date: schedule.date,
+      date: assets.date,
       groups
-    } as Schedule;
+    } as Assets;
   }
 );
 
-export const getSearchedSchedule = createSelector(
-  getFilteredSchedule, getSearchText,
-  (schedule, searchText) => {
+export const getSearchedAssets = createSelector(
+  getFilteredAssets, getSearchText,
+  (assets, searchText) => {
     if (!searchText) {
-      return schedule;
+      return assets;
     }
-    const groups: ScheduleGroup[] = [];
-    schedule.groups.forEach(group => {
+    const groups: VideoGroup[] = [];
+    assets.groups.forEach(group => {
 
-      const sessions = group.sessions.filter(s => s.name.toLowerCase().indexOf(searchText.toLowerCase()) > -1)
-      if (sessions.length) {
-        const groupToAdd: ScheduleGroup = {
+      const videos = group.videos.filter(s => s.name.toLowerCase().indexOf(searchText.toLowerCase()) > -1)
+      if (videos.length) {
+        const groupToAdd: VideoGroup = {
           time: group.time,
-          sessions
+          videos
         }
         groups.push(groupToAdd);
       }
     });
     return {
-      date: schedule.date,
+      date: assets.date,
       groups
-    } as Schedule;
+    } as Assets;
   }
 )
 
-export const getScheduleList = createSelector(
-  getSearchedSchedule,
-  (schedule) => schedule
+export const getAssetsList = createSelector(
+  getSearchedAssets,
+  (assets) => assets
 );
 
-export const getGroupedFavorites = createSelector(
-  getScheduleList, getFavoriteIds,
-  (schedule, favoriteIds) => {
-    const groups: ScheduleGroup[] = [];
-    schedule.groups.forEach(group => {
-      const sessions = group.sessions.filter(s => favoriteIds.indexOf(s.id) > -1)
-      if (sessions.length) {
-        const groupToAdd: ScheduleGroup = {
+export const getGroupedFavoris = createSelector(
+  getAssetsList, getFavoriIds,
+  (assets, favoriIds) => {
+    const groups: VideoGroup[] = [];
+    assets.groups.forEach(group => {
+      const videos = group.videos.filter(s => favoriIds.indexOf(s.id) > -1)
+      if (videos.length) {
+        const groupToAdd: VideoGroup = {
           time: group.time,
-          sessions
+          videos
         }
         groups.push(groupToAdd);
       }
     });
     return {
-      date: schedule.date,
+      date: assets.date,
       groups
-    } as Schedule;
+    } as Assets;
   }
 );
 
@@ -97,45 +97,32 @@ const getIdParam = (_state: AppState, props: any) => {
   return props.match.params['id'];
 }
 
-export const getSession = createSelector(
-  getSessions, getIdParam,
-  (sessions, id) => {
-    return sessions.find(s => s.id === id);
+export const getVideo = createSelector(
+  getVideos, getIdParam,
+  (videos, id) => {
+    return videos.find(s => s.id === id);
   }
 );
 
-export const getSpeaker = createSelector(
-  getSpeakers, getIdParam,
-  (speakers, id) => speakers.find(x => x.id === id)
+export const getServer = createSelector(
+  getServers, getIdParam,
+  (servers, id) => servers.find(x => x.id === id)
 );
 
-export const getSpeakerSessions = createSelector(
-  getSessions,
-  (sessions) => {
-    const speakerSessions: { [key: string]: Session[] } = {};
+export const getServerVideos = createSelector(
+  getVideos,
+  (videos) => {
+    const serverVideos: { [key: string]: Video[] } = {};
 
-    sessions.forEach(session => {
-      session.speakerNames && session.speakerNames.forEach(name => {
-        if (speakerSessions[name]) {
-          speakerSessions[name].push(session);
+    videos.forEach(video => {
+      video.serverNames && video.serverNames.forEach(name => {
+        if (serverVideos[name]) {
+          serverVideos[name].push(video);
         } else {
-          speakerSessions[name] = [session];
+          serverVideos[name] = [video];
         }
       })
     });
-    return speakerSessions;
+    return serverVideos;
   }
 );
-
-export const mapCenter = (state: AppState) => {
-  const item = state.data.locations.find(l => l.id === state.data.mapCenterId);
-  if (item == null) {
-    return {
-      id: 1,
-      name: 'Map Center',
-      lat: 43.071584,
-      lng: -89.380120
-    };
-  }
-  return item;
-}

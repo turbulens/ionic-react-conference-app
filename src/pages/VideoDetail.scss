@@ -1,0 +1,73 @@
+#video-detail-page {
+  .video-track-ionic {
+    color: var(--ion-color-primary);
+  }
+
+  .video-track-angular {
+    color: var(--ion-color-angular);
+  }
+
+  .video-track-communication {
+    color: var(--ion-color-communication);
+  }
+
+  .video-track-tooling {
+    color: var(--ion-color-tooling);
+  }
+
+  .video-track-services {
+    color: var(--ion-color-services);
+  }
+
+  .video-track-design {
+    color: var(--ion-color-design);
+  }
+
+  .video-track-workshop {
+    color: var(--ion-color-workshop);
+  }
+
+  .video-track-food {
+    color: var(--ion-color-food);
+  }
+
+  .video-track-documentation {
+    color: var(--ion-color-documentation);
+  }
+
+  .video-track-navigation {
+    color: var(--ion-color-navigation);
+  }
+
+  .show-favori {
+    position: relative;
+  }
+
+  .icon-heart-empty {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    transform: scale(1);
+    transition: transform 0.3s ease;
+  }
+
+  .icon-heart {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    transform: scale(0);
+    transition: transform 0.3s ease;
+  }
+
+  .show-favori .icon-heart {
+    transform: scale(1);
+  }
+
+  .show-favori .icon-heart-empty {
+    transform: scale(0);
+  }
+
+  h1 {
+    margin: 0;
+  }
+}
