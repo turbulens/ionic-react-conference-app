@@ -1,4 +1,4 @@
-import { getUserData, setIsLoggedInData, setUsernameData, setHasSeenTutorialData } from '../dataApi';
+import { getUserData, setIsLoggedInData, setUsernameData, setHasSeenTutorialData, setDarkmodeData } from '../dataApi';
 import { ActionType } from '../../util/types';
 import { UserState } from './user.state';
 
@@ -49,10 +49,13 @@ export const setHasSeenTutorial = (hasSeenTutorial: boolean) => async (dispatch:
   } as const);
 } 
 
-export const setDarkMode = (darkMode: boolean) => ({
-  type: 'set-dark-mode',
-  darkMode
-} as const);
+export const setDarkMode = (darkMode: boolean) => async (dispatch: React.Dispatch<any>) => {
+  await setDarkmodeData(darkMode);
+  return ({
+    type: 'set-dark-mode',
+    darkMode
+  } as const);
+} 
 
 export type UserActions =
   | ActionType<typeof setLoading>
