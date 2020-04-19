@@ -1,94 +1,94 @@
 import { createSelector } from 'reselect';
-import { Assets, Video, VideoGroup } from '../models/Assets';
+import { Planification, Notification, PlanificationGroup } from '../models/Planification';
 import { AppState } from './state';
 
-const getAssets = (state: AppState) => {
+const getPlanification = (state: AppState) => {
 
-  return state.data.assets
+  return state.data.planification
 };
-export const getServers = (state: AppState) => state.data.servers;
-const getVideos = (state: AppState) => state.data.videos;
-const getFilteredTracks = (state: AppState) => state.data.filteredTracks;
-const getFavoriIds = (state: AppState) => state.data.favoris;
+export const getAssets = (state: AppState) => state.data.assets;
+const getNotifications = (state: AppState) => state.data.notifications;
+const getFilteredTags = (state: AppState) => state.data.filteredTags;
+const getFavoriteIds = (state: AppState) => state.data.favoris;
 const getSearchText = (state: AppState) => state.data.searchText;
 
-export const getFilteredAssets = createSelector(
-  getAssets, getFilteredTracks,
-  (assets, filteredTracks) => {
-    const groups: VideoGroup[] = [];
-    assets.groups.forEach(group => {
-      const videos: Video[] = [];
-      group.videos.forEach(video => {
-        video.tracks.forEach(track => {
-          if (filteredTracks.indexOf(track) > -1) {
-            videos.push(video);
+export const getFilteredPlanification = createSelector(
+  getPlanification, getFilteredTags,
+  (planification, filteredTags) => {
+    const groups: PlanificationGroup[] = [];
+    planification.groups.forEach(group => {
+      const notifications: Notification[] = [];
+      group.notifications.forEach(notification => {
+        notification.tags.forEach(tag => {
+          if (filteredTags.indexOf(tag) > -1) {
+            notifications.push(notification);
           }
         })
       })
-      if (videos.length) {
-        const groupToAdd: VideoGroup = {
-          time: group.time,
-          videos
+      if (notifications.length) {
+        const groupToAdd: PlanificationGroup = {
+          jour: group.jour,
+          notifications
         }
         groups.push(groupToAdd);
       }
     });
 
     return {
-      date: assets.date,
+      annee: planification.annee,
       groups
-    } as Assets;
+    } as Planification;
   }
 );
 
-export const getSearchedAssets = createSelector(
-  getFilteredAssets, getSearchText,
-  (assets, searchText) => {
+export const getSearchedPlanification = createSelector(
+  getFilteredPlanification, getSearchText,
+  (planification, searchText) => {
     if (!searchText) {
-      return assets;
+      return planification;
     }
-    const groups: VideoGroup[] = [];
-    assets.groups.forEach(group => {
+    const groups: PlanificationGroup[] = [];
+    planification.groups.forEach(group => {
 
-      const videos = group.videos.filter(s => s.name.toLowerCase().indexOf(searchText.toLowerCase()) > -1)
-      if (videos.length) {
-        const groupToAdd: VideoGroup = {
-          time: group.time,
-          videos
+      const notifications = group.notifications.filter(s => s.name.toLowerCase().indexOf(searchText.toLowerCase()) > -1)
+      if (notifications.length) {
+        const groupToAdd: PlanificationGroup = {
+          jour: group.jour,
+          notifications
         }
         groups.push(groupToAdd);
       }
     });
     return {
-      date: assets.date,
+      annee: planification.annee,
       groups
-    } as Assets;
+    } as Planification;
   }
 )
 
-export const getAssetsList = createSelector(
-  getSearchedAssets,
-  (assets) => assets
+export const getPlanificationList = createSelector(
+  getSearchedPlanification,
+  (planification) => planification
 );
 
 export const getGroupedFavoris = createSelector(
-  getAssetsList, getFavoriIds,
-  (assets, favoriIds) => {
-    const groups: VideoGroup[] = [];
-    assets.groups.forEach(group => {
-      const videos = group.videos.filter(s => favoriIds.indexOf(s.id) > -1)
-      if (videos.length) {
-        const groupToAdd: VideoGroup = {
-          time: group.time,
-          videos
+  getPlanificationList, getFavoriteIds,
+  (planification, favoriteIds) => {
+    const groups: PlanificationGroup[] = [];
+    planification.groups.forEach(group => {
+      const notifications = group.notifications.filter(s => favoriteIds.indexOf(s.id) > -1)
+      if (notifications.length) {
+        const groupToAdd: PlanificationGroup = {
+          jour: group.jour,
+          notifications
         }
         groups.push(groupToAdd);
       }
     });
     return {
-      date: assets.date,
+      annee: planification.annee,
       groups
-    } as Assets;
+    } as Planification;
   }
 );
 
@@ -97,32 +97,45 @@ const getIdParam = (_state: AppState, props: any) => {
   return props.match.params['id'];
 }
 
-export const getVideo = createSelector(
-  getVideos, getIdParam,
-  (videos, id) => {
-    return videos.find(s => s.id === id);
+export const getNotification = createSelector(
+  getNotifications, getIdParam,
+  (notifications, id) => {
+    return notifications.find(s => s.id === id);
   }
 );
 
-export const getServer = createSelector(
-  getServers, getIdParam,
-  (servers, id) => servers.find(x => x.id === id)
+export const getAsset = createSelector(
+  getAssets, getIdParam,
+  (assets, id) => assets.find(x => x.id === id)
 );
 
-export const getServerVideos = createSelector(
-  getVideos,
-  (videos) => {
-    const serverVideos: { [key: string]: Video[] } = {};
+export const getAssetNotifications = createSelector(
+  getNotifications,
+  (notifications) => {
+    const assetNotifications: { [key: string]: Notification[] } = {};
 
-    videos.forEach(video => {
-      video.serverNames && video.serverNames.forEach(name => {
-        if (serverVideos[name]) {
-          serverVideos[name].push(video);
+    notifications.forEach(notification => {
+      notification.assetNames && notification.assetNames.forEach(name => {
+        if (assetNotifications[name]) {
+          assetNotifications[name].push(notification);
         } else {
-          serverVideos[name] = [video];
+          assetNotifications[name] = [notification];
         }
       })
     });
-    return serverVideos;
+    return assetNotifications;
   }
 );
+
+export const mapCenter = (state: AppState) => {
+  const item = state.data.locations.find(l => l.id === state.data.mapCenterId);
+  if (item == null) {
+    return {
+      id: 1,
+      name: 'Carte Center',
+      lat: 43.071584,
+      lng: -89.380120
+    };
+  }
+  return item;
+}

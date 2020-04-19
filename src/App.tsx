@@ -26,9 +26,15 @@ import './theme/variables.css';
 import MainTabs from './pages/MainTabs';
 import { connect } from './data/connect';
 import { AppContextProvider } from './data/AppContext';
-import { loadAssetsData } from './data/videos/videos.actions';
-import { setIsLoggedIn, setUsername, loadUserData } from './data/user/user.actions';
-import { Assets } from "./models/Assets";
+import { loadApplData } from './data/notifications/notifications.actions';
+import { setIsLoggedIn, setUtilisateur, loadUserData } from './data/user/user.actions';
+import Compte from './pages/Compte';
+import Connexion from './pages/Connexion';
+import Inscription from './pages/Inscription';
+import Support from './pages/Support';
+import Information from './pages/Information';
+import AccueilOuInformation from './components/AccueilOuInformation';
+import { Planification } from "./models/Planification";
 
 const App: React.FC = () => {
   return (
@@ -40,28 +46,28 @@ const App: React.FC = () => {
 
 interface StateProps {
   darkMode: boolean;
-  assets: Assets;
+  planification: Planification;
 }
 
 interface DispatchProps {
-  loadAssetsData: typeof loadAssetsData;
+  loadApplData: typeof loadApplData;
   loadUserData: typeof loadUserData;
   setIsLoggedIn: typeof setIsLoggedIn;
-  setUsername: typeof setUsername;
+  setUtilisateur: typeof setUtilisateur;
 }
 
 interface IonicAppProps extends StateProps, DispatchProps { }
 
-const IonicApp: React.FC<IonicAppProps> = ({ darkMode, assets, setIsLoggedIn, setUsername, loadAssetsData, loadUserData }) => {
+const IonicApp: React.FC<IonicAppProps> = ({ darkMode, planification, setIsLoggedIn, setUtilisateur, loadApplData, loadUserData }) => {
 
   useEffect(() => {
     loadUserData();
-    loadAssetsData();
+    loadApplData();
     // eslint-disable-next-line
   }, []);
 
   return (
-    assets.groups.length === 0 ? (
+    planification.groups.length === 0 ? (
       <div></div>
     ) : (
         <IonApp className={`${darkMode ? 'dark-theme' : ''}`}>
@@ -70,13 +76,17 @@ const IonicApp: React.FC<IonicAppProps> = ({ darkMode, assets, setIsLoggedIn, se
               <Menu />
               <IonRouterOutlet id="main">
                 <Route path="/tabs" component={MainTabs} />
-
-                <Route path="/logout" render={() => {
+                <Route path="/compte" component={Compte} />
+                <Route path="/connexion" component={Connexion} />
+                <Route path="/inscription" component={Inscription} />
+                <Route path="/support" component={Support} />
+                <Route path="/information" component={Information} />
+                <Route path="/deconnexion" render={() => {
                   setIsLoggedIn(false);
-                  setUsername(undefined);
+                  setUtilisateur(undefined);
                   return <Redirect to="/tabs" />
                 }} />
-                <Route path="/" component={MainTabs} exact />
+                <Route path="/" component={AccueilOuInformation} exact />
               </IonRouterOutlet>
             </IonSplitPane>
           </IonReactRouter>
@@ -90,8 +100,8 @@ export default App;
 const IonicAppConnected = connect<{}, StateProps, DispatchProps>({
   mapStateToProps: (state) => ({
     darkMode: state.user.darkMode,
-    assets: state.data.assets
+    planification: state.data.planification
   }),
-  mapDispatchToProps: { loadAssetsData, loadUserData, setIsLoggedIn, setUsername },
+  mapDispatchToProps: { loadApplData, loadUserData, setIsLoggedIn, setUtilisateur },
   component: IonicApp
 });

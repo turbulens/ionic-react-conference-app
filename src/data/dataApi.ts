@@ -1,33 +1,39 @@
 import { Plugins } from '@capacitor/core';
-import { Assets, Video } from '../models/Assets';
-import { Server } from '../models/Server';
+import { Planification, Notification } from '../models/Planification';
+import { Asset } from '../models/Asset';
+import { Location } from '../models/Location';
 
 const { Storage } = Plugins;
 
 const dataUrl = '/assets/data/data.json';
+const locationsUrl = '/assets/data/locations.json';
 
 const HAS_LOGGED_IN = 'hasLoggedIn';
-const USERNAME = 'username';
+const HAS_SEEN_TUTORIAL = 'hasSeenInformation';
+const UTILISATEUR = 'utilisateur';
 const DARKMODE = 'darkMode';
 
-export const getConfData = async () => {
+export const getApplData = async () => {
   const response = await Promise.all([
-    fetch(dataUrl),]);
+    fetch(dataUrl),
+    fetch(locationsUrl)]);
   const responseData = await response[0].json();
-  const assets = responseData.assets[0] as Assets;
-  const videos = parseVideos(assets);
-  const servers = responseData.servers as Server[];
-  const allTracks = videos
-    .reduce((all, video) => all.concat(video.tracks), [] as string[])
-    .filter((trackName, index, array) => array.indexOf(trackName) === index)
+  const planification = responseData.planification[0] as Planification;
+  const notifications = parseNotifications(planification);
+  const assets = responseData.assets as Asset[];
+  const locations = await response[1].json() as Location[];
+  const allTags = notifications
+    .reduce((all, notification) => all.concat(notification.tags), [] as string[])
+    .filter((tagName, index, array) => array.indexOf(tagName) === index)
     .sort();
 
   const data = {
+    planification,
+    notifications,
+    locations,
     assets,
-    videos,
-    servers,
-    allTracks,
-    filteredTracks: [...allTracks]
+    allTags,
+    filteredTags: [...allTags]
   }
   return data;
 }
@@ -36,14 +42,17 @@ export const getUserData = async () => {
   const response = await Promise.all([
     Storage.get({ key: HAS_LOGGED_IN }),
     Storage.get({ key: DARKMODE }),
-    Storage.get({ key: USERNAME })]);
+    Storage.get({ key: HAS_SEEN_TUTORIAL }),
+    Storage.get({ key: UTILISATEUR })]);
   const isLoggedin = await response[0].value === 'true';
   const darkMode = await response[1].value === 'true';
-  const username = await response[2].value || undefined;
+  const hasSeenInformation = await response[2].value === 'true';
+  const utilisateur = await response[3].value || undefined;
   const data = {
     isLoggedin,
     darkMode,
-    username
+    hasSeenInformation,
+    utilisateur
   }
   return data;
 }
@@ -56,18 +65,22 @@ export const setDarkmodeData = async (darkMode: boolean) => {
   await Storage.set({ key: DARKMODE, value: JSON.stringify(darkMode) });
 }
 
-export const setUsernameData = async (username?: string) => {
-  if (!username) {
-    await Storage.remove({ key: USERNAME });
+export const setHasSeenInformationData = async (hasSeenInformation: boolean) => {
+  await Storage.set({ key: HAS_SEEN_TUTORIAL, value: JSON.stringify(hasSeenInformation) });
+}
+
+export const setUtilisateurData = async (utilisateur?: string) => {
+  if (!utilisateur) {
+    await Storage.remove({ key: UTILISATEUR });
   } else {
-    await Storage.set({ key: USERNAME, value: username });
+    await Storage.set({ key: UTILISATEUR, value: utilisateur });
   }
 }
 
-function parseVideos(assets: Assets) {
-  const videos: Video[] = [];
-  assets.groups.forEach(g => {
-    g.videos.forEach(s => videos.push(s))
+function parseNotifications(planification: Planification) {
+  const notifications: Notification[] = [];
+  planification.groups.forEach(g => {
+    g.notifications.forEach(s => notifications.push(s))
   });
-  return videos;
+  return notifications;
 }

@@ -1,0 +1,73 @@
+#notification-detail-page {
+  .notification-tag-ionic {
+    color: var(--ion-color-primary);
+  }
+
+  .notification-tag-angular {
+    color: var(--ion-color-angular);
+  }
+
+  .notification-tag-communication {
+    color: var(--ion-color-communication);
+  }
+
+  .notification-tag-tooling {
+    color: var(--ion-color-tooling);
+  }
+
+  .notification-tag-services {
+    color: var(--ion-color-services);
+  }
+
+  .notification-tag-design {
+    color: var(--ion-color-design);
+  }
+
+  .notification-tag-workshop {
+    color: var(--ion-color-workshop);
+  }
+
+  .notification-tag-food {
+    color: var(--ion-color-food);
+  }
+
+  .notification-tag-documentation {
+    color: var(--ion-color-documentation);
+  }
+
+  .notification-tag-navigation {
+    color: var(--ion-color-navigation);
+  }
+
+  .show-favorite {
+    position: relative;
+  }
+
+  .icon-heart-empty {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    transform: scale(1);
+    transition: transform 0.3s ease;
+  }
+
+  .icon-heart {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    transform: scale(0);
+    transition: transform 0.3s ease;
+  }
+
+  .show-favorite .icon-heart {
+    transform: scale(1);
+  }
+
+  .show-favorite .icon-heart-empty {
+    transform: scale(0);
+  }
+
+  h1 {
+    margin: 0;
+  }
+}

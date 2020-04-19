@@ -31,7 +31,7 @@ exports[`renders without crashing 1`] = `
                   slot="start"
                 />
                 <ion-label>
-                  Schedule
+                  Planification
                 </ion-label>
               </ion-item>
             </ion-menu-toggle>
@@ -43,7 +43,7 @@ exports[`renders without crashing 1`] = `
                   slot="start"
                 />
                 <ion-label>
-                  Speakers
+                  Assets
                 </ion-label>
               </ion-item>
             </ion-menu-toggle>
@@ -55,7 +55,7 @@ exports[`renders without crashing 1`] = `
                   slot="start"
                 />
                 <ion-label>
-                  Map
+                  Carte
                 </ion-label>
               </ion-item>
             </ion-menu-toggle>
@@ -67,14 +67,14 @@ exports[`renders without crashing 1`] = `
                   slot="start"
                 />
                 <ion-label>
-                  About
+                  APropos
                 </ion-label>
               </ion-item>
             </ion-menu-toggle>
           </ion-list>
           <ion-list>
             <ion-list-header>
-              Account
+              Compte
             </ion-list-header>
             <ion-menu-toggle
               auto-hide="false"
@@ -84,7 +84,7 @@ exports[`renders without crashing 1`] = `
                   slot="start"
                 />
                 <ion-label>
-                  Account
+                  Compte
                 </ion-label>
               </ion-item>
             </ion-menu-toggle>
@@ -108,20 +108,20 @@ exports[`renders without crashing 1`] = `
                   slot="start"
                 />
                 <ion-label>
-                  Logout
+                  Deconnexion
                 </ion-label>
               </ion-item>
             </ion-menu-toggle>
           </ion-list>
           <ion-list>
             <ion-list-header>
-              Tutorial
+              Information
             </ion-list-header>
             <ion-item>
               <ion-icon
                 slot="start"
               />
-              Show Tutorial
+              Information
             </ion-item>
           </ion-list>
         </ion-content>
@@ -151,14 +151,14 @@ exports[`renders without crashing 1`] = `
                     </ion-buttons>
                     <ion-segment>
                       <ion-segment-button
-                        value="all"
+                        value="tous"
                       >
-                        All
+                        Tous
                       </ion-segment-button>
                       <ion-segment-button
-                        value="favorites"
+                        value="favoris"
                       >
-                        Favorites
+                        Favoris
                       </ion-segment-button>
                     </ion-segment>
                     <ion-buttons
@@ -175,7 +175,7 @@ exports[`renders without crashing 1`] = `
                     color="primary"
                   >
                     <ion-searchbar
-                      placeholder="Search"
+                      placeholder="Recherche"
                     />
                   </ion-toolbar>
                 </ion-header>
@@ -187,7 +187,7 @@ exports[`renders without crashing 1`] = `
                   </ion-refresher>
                   <ion-list>
                     <ion-list-header>
-                      No Sessions Found
+                      Aucune notification trouvée
                     </ion-list-header>
                   </ion-list>
                   <ion-list
@@ -231,26 +231,26 @@ exports[`renders without crashing 1`] = `
             </ion-router-outlet>
           </div>
           <ion-tab-bar
-            current-path="/tabs/schedule"
-            selected-tab="schedule"
+            current-path="/tabs/planification"
+            selected-tab="planification"
             slot="bottom"
           >
             <ion-tab-button
-              href="/tabs/schedule"
-              tab="schedule"
+              href="/tabs/planification"
+              tab="planification"
             >
               <ion-icon />
               <ion-label>
-                Schedule
+                Planification
               </ion-label>
             </ion-tab-button>
             <ion-tab-button
-              href="/tabs/speakers"
-              tab="speakers"
+              href="/tabs/assets"
+              tab="assets"
             >
               <ion-icon />
               <ion-label>
-                Speakers
+                Assets
               </ion-label>
             </ion-tab-button>
             <ion-tab-button
@@ -259,16 +259,16 @@ exports[`renders without crashing 1`] = `
             >
               <ion-icon />
               <ion-label>
-                Map
+                Carte
               </ion-label>
             </ion-tab-button>
             <ion-tab-button
-              href="/tabs/about"
-              tab="about"
+              href="/tabs/apropos"
+              tab="apropos"
             >
               <ion-icon />
               <ion-label>
-                About
+                APropos
               </ion-label>
             </ion-tab-button>
           </ion-tab-bar>

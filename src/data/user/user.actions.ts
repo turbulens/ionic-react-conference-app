@@ -1,4 +1,4 @@
-import { getUserData, setIsLoggedInData, setUsernameData, setDarkmodeData } from '../dataApi';
+import { getUserData, setIsLoggedInData, setUtilisateurData, setHasSeenInformationData, setDarkmodeData } from '../dataApi';
 import { ActionType } from '../../util/types';
 import { UserState } from './user.state';
 
@@ -20,9 +20,9 @@ export const setData = (data: Partial<UserState>) => ({
   data
 } as const);
 
-export const logoutUser = () => async (dispatch: React.Dispatch<any>) => {
+export const deconnexionUser = () => async (dispatch: React.Dispatch<any>) => {
   await setIsLoggedInData(false);
-  dispatch(setUsername());
+  dispatch(setUtilisateur());
 };
 
 export const setIsLoggedIn = (loggedIn: boolean) => async (dispatch: React.Dispatch<any>) => {
@@ -33,13 +33,21 @@ export const setIsLoggedIn = (loggedIn: boolean) => async (dispatch: React.Dispa
   } as const)
 };
 
-export const setUsername = (username?: string) => async (dispatch: React.Dispatch<any>) => {
-  await setUsernameData(username);
+export const setUtilisateur = (utilisateur?: string) => async (dispatch: React.Dispatch<any>) => {
+  await setUtilisateurData(utilisateur);
   return ({
-    type: 'set-username',
-    username
+    type: 'set-utilisateur',
+    utilisateur
   } as const);
 };
+
+export const setHasSeenInformation = (hasSeenInformation: boolean) => async (dispatch: React.Dispatch<any>) => {
+  await setHasSeenInformationData(hasSeenInformation);
+  return ({
+    type: 'set-has-seen-information',
+    hasSeenInformation
+  } as const);
+} 
 
 export const setDarkMode = (darkMode: boolean) => async (dispatch: React.Dispatch<any>) => {
   await setDarkmodeData(darkMode);
@@ -53,5 +61,6 @@ export type UserActions =
   | ActionType<typeof setLoading>
   | ActionType<typeof setData>
   | ActionType<typeof setIsLoggedIn>
-  | ActionType<typeof setUsername>
+  | ActionType<typeof setUtilisateur>
+  | ActionType<typeof setHasSeenInformation>
   | ActionType<typeof setDarkMode>
